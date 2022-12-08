@@ -1,6 +1,7 @@
 import { PrismaClientValidationError } from "@prisma/client/runtime";
+import formatMessage from "../../helpers/errors/messages";
 import client from "../../libs/prisma";
-import AuthUser from "../types";
+import { AuthUser } from "../types";
 
 class UserService {
   constructor() {}
@@ -17,7 +18,7 @@ class UserService {
     } catch (error) {
       if (error instanceof PrismaClientValidationError) {
         console.log(error.message);
-        
+
         return {
           success: false,
           error: error.message,
@@ -26,16 +27,24 @@ class UserService {
     }
   }
 
-  async findUser(id: number | undefined) {
+  async findUserByEmail(email: string | undefined) {
     try {
+      if (!email)
+        return {
+          success: false,
+          message: formatMessage(1, "email"),
+        };
+
       const user = await client.user.findUnique({
         where: {
-          id: id,
+          email: email,
         },
       });
 
-      console.log(user);
-      return user;
+      return {
+        success: true,
+        user,
+      };
     } catch (error) {
       return {
         success: false,

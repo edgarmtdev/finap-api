@@ -3,8 +3,14 @@ import { Role } from "@prisma/client";
 interface AuthUser {
   role: Role;
   email: string;
+  password: string;
   name: string;
   lastName: string;
+}
+
+interface LoginUser {
+  email: string;
+  password: string;
 }
 
 interface Account {
@@ -12,5 +18,4 @@ interface Account {
   total: number;
 }
 
-
-export default AuthUser;
+export { AuthUser, LoginUser };

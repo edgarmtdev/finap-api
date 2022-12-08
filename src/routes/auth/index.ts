@@ -12,9 +12,13 @@ const authRouter = (app: express.Application) => {
   });
 
   router.post("/register", async (req: Request, res: Response) => {
-    console.log(req.body);
     const user = await authService.register(req.body);
     return res.json(user);
+  });
+
+  router.post("/login", async (req: Request, res: Response) => {
+    const response = await authService.login(req.body);
+    return res.json(response);
   });
 };
 

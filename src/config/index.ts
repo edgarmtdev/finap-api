@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import Config from "./types/index";
 
 // console.log(path.resolve(__dirname, '../../.env.' + process.env.NODE_ENV + '.local'));
-dotenv.config()
+dotenv.config();
 
 const configDefault: Config = {
   port: process.env.PORT,
