@@ -1,12 +1,18 @@
 import { PrismaClientValidationError } from "@prisma/client/runtime";
 import formatMessage from "../../helpers/errors/messages";
 import client from "../../libs/prisma";
-import { AuthUser } from "../types";
+import { AuthUser, User } from "../types";
 
 class UserService {
   constructor() {}
 
-  async newUser(data: AuthUser) {
+  async newUser(
+    data: AuthUser
+  ): Promise<
+    | { success: boolean; user: User }
+    | { success: boolean; error: string }
+    | undefined
+  > {
     try {
       const user = await client.user.create({
         data: data,

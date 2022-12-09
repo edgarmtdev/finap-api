@@ -1,12 +1,14 @@
 import bcrypt from "bcrypt";
+import Jwt from "jsonwebtoken";
+import config from "../../config";
 import formatMessage from "../../helpers/errors/messages";
-import { AuthUser, LoginUser } from "../types";
+import { AuthUser, LoginUser, TokenUser, User } from "../types";
 import UserService from "../user";
 
 class AuthService {
   constructor(private userService: UserService = new UserService()) {}
 
-  async register(data: AuthUser) {
+  async register(data: AuthUser): Promise<object | unknown> {
     try {
       if (data) {
         data.password = await this.encryptPassword(data.password);
@@ -22,7 +24,7 @@ class AuthService {
     }
   }
 
-  async login(data: LoginUser) {
+  async login(data: LoginUser): Promise<object | unknown> {
     try {
       const { email, password } = data;
       const response = await this.userService.findUserByEmail(email);
@@ -34,7 +36,7 @@ class AuthService {
         );
 
         if (passwordCompare) {
-          return response;
+          return this.formatDataToReturn(response.user);
         }
 
         return {
@@ -47,15 +49,41 @@ class AuthService {
     }
   }
 
-  private async encryptPassword(password: string) {
-    const salt = await bcrypt.genSalt(10);
-    const response = await bcrypt.hash(password, salt);
+  private formatDataToReturn(user: User): object {
+    const data: TokenUser = {
+      id: user.id,
+      name: user.name,
+      lastName: user.lastName,
+      role: user.role,
+      email: user.email,
+    };
+
+    const token: string = this.getToken(data);
+
+    return {
+      success: true,
+      user: data,
+      token: token,
+    };
+  }
+
+  private async encryptPassword(password: string): Promise<string> {
+    const salt: string = await bcrypt.genSalt(10);
+    const response: string = await bcrypt.hash(password, salt);
     return response;
   }
 
-  private async comparePassword(password: string, passwordEncrypt: string) {
-    const response = await bcrypt.compare(password, passwordEncrypt);
+  private async comparePassword(
+    password: string,
+    passwordEncrypt: string
+  ): Promise<boolean> {
+    const response: boolean = await bcrypt.compare(password, passwordEncrypt);
     return response;
+  }
+
+  private getToken(user: TokenUser): string {
+    const token: string = Jwt.sign(user, config.jwtSecret, { expiresIn: "2d" });
+    return token;
   }
 }
 
