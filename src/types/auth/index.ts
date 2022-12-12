@@ -1,12 +1,10 @@
 import { Role } from "@prisma/client";
 
-interface User {
-  id: number;
-  role: Role;
-  email: string;
-  password: string;
-  name: string;
-  lastName: string;
+interface AuthResponse {
+  success: boolean;
+  user?: TokenUser;
+  token?: string;
+  message?: string | unknown;
 }
 
 interface AuthUser {
@@ -30,9 +28,4 @@ interface TokenUser {
   lastName: string;
 }
 
-interface Account {
-  idUser: number;
-  total: number;
-}
-
-export { AuthUser, LoginUser, TokenUser, User };
+export { AuthResponse, AuthUser, LoginUser, TokenUser };

@@ -1,15 +1,15 @@
 import express, { Router, Request, Response } from "express";
+import tokenToCookie from "../../helpers/auth/tokenToCookie";
 import AuthService from "../../services/auth";
+import UserService from "../../services/user";
+import { AuthResponse } from "../../types/auth";
 
 const authRouter = (app: express.Application) => {
-  const authService: AuthService = new AuthService();
+  const userService: UserService = new UserService();
+  const authService: AuthService = new AuthService(userService);
 
   const router: express.IRouter = Router();
   app.use("/api/auth", router);
-
-  router.get("/", (req: Request, res: Response) => {
-    return res.json({ user: "Edgar" });
-  });
 
   router.post("/register", async (req: Request, res: Response) => {
     const user = await authService.register(req.body);
@@ -17,8 +17,11 @@ const authRouter = (app: express.Application) => {
   });
 
   router.post("/login", async (req: Request, res: Response) => {
-    const response = await authService.login(req.body);
-    return res.json(response);
+    const response: AuthResponse = await authService.login(req.body);
+    if (response.success) {
+      return tokenToCookie(res, response, 200);
+    }
+    return tokenToCookie(res, response, 400)
   });
 };
 

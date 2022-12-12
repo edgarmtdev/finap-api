@@ -2,11 +2,14 @@ import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 import config from "../../config";
 import formatMessage from "../../helpers/errors/messages";
-import { AuthUser, LoginUser, TokenUser, User } from "../types";
+import { AuthResponse, AuthUser, LoginUser, TokenUser } from "../../types/auth";
+import { User } from "../../types/user";
 import UserService from "../user";
 
 class AuthService {
-  constructor(private userService: UserService = new UserService()) {}
+  constructor(private userService: UserService) {
+    this.userService = userService;
+  }
 
   async register(data: AuthUser): Promise<object | unknown> {
     try {
@@ -24,32 +27,44 @@ class AuthService {
     }
   }
 
-  async login(data: LoginUser): Promise<object | unknown> {
+  async login(data: LoginUser) {
     try {
       const { email, password } = data;
-      const response = await this.userService.findUserByEmail(email);
+      if (email && password) {
+        const response = await this.userService.findUserByEmail(email);
 
-      if (response.user) {
-        const passwordCompare: boolean | unknown = await this.comparePassword(
-          password,
-          response.user.password
-        );
+        if (response.user) {
+          const passwordCompare: boolean | unknown = await this.comparePassword(
+            password,
+            response.user.password
+          );
 
-        if (passwordCompare) {
-          return this.formatDataToReturn(response.user);
+          if (passwordCompare) {
+            return this.formatDataToReturn(response.user);
+          }
+
+          return {
+            success: false,
+            message: formatMessage(3, "password"),
+          };
         }
+      }
 
-        return {
-          success: false,
-          message: formatMessage(3, "password"),
-        };
+      return {
+        success: false,
+        message: formatMessage(3, "email and password"),
       }
     } catch (error) {
-      return error;
+      console.log("error", error);
+
+      return {
+        success: false, 
+        message: error,
+      };
     }
   }
 
-  private formatDataToReturn(user: User): object {
+  private formatDataToReturn(user: User): AuthResponse {
     const data: TokenUser = {
       id: user.id,
       name: user.name,

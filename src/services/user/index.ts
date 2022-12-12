@@ -1,7 +1,8 @@
 import { PrismaClientValidationError } from "@prisma/client/runtime";
 import formatMessage from "../../helpers/errors/messages";
 import client from "../../libs/prisma";
-import { AuthUser, User } from "../types";
+import { AuthUser } from "../../types/auth";
+import { User } from "../../types/user";
 
 class UserService {
   constructor() {}
