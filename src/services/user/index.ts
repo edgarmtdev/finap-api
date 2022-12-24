@@ -1,11 +1,15 @@
 import { PrismaClientValidationError } from "@prisma/client/runtime";
+import { PrismaClient } from "@prisma/client";
 import formatMessage from "../../helpers/errors/messages";
-import client from "../../libs/prisma";
 import { AuthUser } from "../../types/auth";
 import { User } from "../../types/user";
 
 class UserService {
-  constructor() {}
+  private client: PrismaClient;
+
+  constructor(client: PrismaClient) {
+    this.client = client;
+  }
 
   async newUser(
     data: AuthUser
@@ -15,7 +19,7 @@ class UserService {
     | undefined
   > {
     try {
-      const user = await client.user.create({
+      const user = await this.client.user.create({
         data: data,
       });
       return {
@@ -42,9 +46,35 @@ class UserService {
           message: formatMessage(1, "email"),
         };
 
-      const user = await client.user.findUnique({
+      const user = await this.client.user.findUnique({
         where: {
           email: email,
+        },
+      });
+
+      return {
+        success: true,
+        user,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error,
+      };
+    }
+  }
+
+  async findUserById(id: string) {
+    try {
+      if (!id)
+        return {
+          success: false,
+          message: formatMessage(1, "id"),
+        };
+
+      const user = await this.client.user.findUnique({
+        where: {
+          id: parseInt(id),
         },
       });
 

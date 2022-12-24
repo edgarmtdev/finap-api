@@ -1,10 +1,16 @@
 import dotenv from "dotenv";
-// import path from "path";
+import path from "path";
 import Config from "./types/index";
 import Jwt from "jsonwebtoken";
 
-// console.log(path.resolve(__dirname, '../../.env.' + process.env.NODE_ENV + '.local'));
-dotenv.config();
+const enviroment: string = path.resolve(
+  __dirname,
+  (("../../.env." + process.env.NODE_ENV) as string) + ".local"
+);
+
+dotenv.config({
+  path: enviroment,
+});
 
 const configDefault: Config = {
   port: process.env.PORT,

@@ -4,7 +4,7 @@
   "description": "a software for finances",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=test ts-node ts-mocha -p ./tsconfig.json src/test/*.spec.ts",
     "start": "cross-env NODE_ENV=production babel-node --extensions \".ts\" index.ts",
     "dev": "cross-env NODE_ENV=development nodemon --exec npx babel-node --extensions \".ts\" index.ts",
     "lint:fix": "eslint --fix .",
@@ -22,6 +22,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "babel": "^6.23.0",
     "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
@@ -37,15 +38,24 @@
     "@babel/node": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
+    "@types/chai": "^4.3.4",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.1",
     "@types/morgan": "^1.9.3",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
+    "chai": "^4.3.7",
     "eslint": "^8.28.0",
     "husky": "^8.0.2",
+    "mocha": "^10.2.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.0",
-    "prisma": "^4.6.1"
+    "prisma": "^4.6.1",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
   }
 }

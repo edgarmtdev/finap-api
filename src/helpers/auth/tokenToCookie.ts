@@ -12,7 +12,7 @@ const tokenToCookie = (
     return res
       .cookie("token", result.token, {
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "none",
         expires: date,
       })

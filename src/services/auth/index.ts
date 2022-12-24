@@ -8,7 +8,7 @@ import UserService from "../user";
 
 class AuthService {
   constructor(private userService: UserService) {
-    this.userService = userService;
+    this.userService = userService; 
   }
 
   async register(data: AuthUser): Promise<object | unknown> {
