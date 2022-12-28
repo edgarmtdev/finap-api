@@ -19,7 +19,7 @@ const tokenToCookie = (
       .status(statusCode)
       .json(result.user);
   }
-  return res.status(statusCode).json(result.user)
+  return res.status(statusCode).json(result.user);
 };
 
 export default tokenToCookie;

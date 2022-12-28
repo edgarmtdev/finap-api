@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
+import client from "src/libs/prisma";
 import config from "../../config";
 import formatMessage from "../../helpers/errors/messages";
 import { AuthResponse, AuthUser, LoginUser, TokenUser } from "../../types/auth";
@@ -7,8 +8,10 @@ import { User } from "../../types/user";
 import UserService from "../user";
 
 class AuthService {
-  constructor(private userService: UserService) {
-    this.userService = userService; 
+  private userService: UserService;
+
+  constructor() {
+    this.userService = new UserService(client);
   }
 
   async register(data: AuthUser): Promise<object | unknown> {
@@ -53,12 +56,12 @@ class AuthService {
       return {
         success: false,
         message: formatMessage(3, "email and password"),
-      }
+      };
     } catch (error) {
       console.log("error", error);
 
       return {
-        success: false, 
+        success: false,
         message: error,
       };
     }

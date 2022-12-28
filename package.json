@@ -1,7 +1,7 @@
 {
   "name": "finance-app",
   "version": "1.0.0",
-  "description": "a software for finances",
+  "description": "A software for finances",
   "main": "index.ts",
   "scripts": {
     "test": "cross-env NODE_ENV=test ts-node ts-mocha -p ./tsconfig.json src/test/*.spec.ts",
@@ -11,7 +11,9 @@
     "lint:check": "eslint .",
     "precommit": "lint-staged",
     "prepare": "husky install",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prisma-dev": "dotenv -e .env.development.local -- npx prisma migrate dev",
+    "prisma-qa": "dotenv -e .env.test.local -- npx prisma migrate dev"
   },
   "author": "edgarmt.dev",
   "license": "MIT",

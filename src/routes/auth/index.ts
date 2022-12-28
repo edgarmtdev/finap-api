@@ -1,12 +1,11 @@
+import { PrismaClient } from "@prisma/client";
 import express, { Router, Request, Response } from "express";
 import tokenToCookie from "../../helpers/auth/tokenToCookie";
 import AuthService from "../../services/auth";
-import UserService from "../../services/user";
 import { AuthResponse } from "../../types/auth";
 
 const authRouter = (app: express.Application) => {
-  const userService: UserService = new UserService();
-  const authService: AuthService = new AuthService(userService);
+  const authService: AuthService = new AuthService();
 
   const router: express.IRouter = Router();
   app.use("/api/auth", router);
@@ -21,7 +20,7 @@ const authRouter = (app: express.Application) => {
     if (response.success) {
       return tokenToCookie(res, response, 200);
     }
-    return tokenToCookie(res, response, 400)
+    return tokenToCookie(res, response, 400);
   });
 };
 

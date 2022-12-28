@@ -21,8 +21,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Routers
-usersRouter(app, client);
 authRouter(app);
+usersRouter(app, client);
 accountRouter(app, client);
 transactionsRouter(app, client);
 
