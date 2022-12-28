@@ -17,7 +17,7 @@ model User {
   password     String
   name         String
   lastName     String
-  account      Account[]
+  accounts      Account[]
   transactions Transactions[]
 }
 

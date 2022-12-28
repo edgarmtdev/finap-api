@@ -1,24 +1,36 @@
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
-import client from "src/libs/prisma";
+import client from "../../libs/prisma";
 import config from "../../config";
 import formatMessage from "../../helpers/errors/messages";
 import { AuthResponse, AuthUser, LoginUser, TokenUser } from "../../types/auth";
 import { User } from "../../types/user";
 import UserService from "../user";
+import Account from "../account";
 
 class AuthService {
-  private userService: UserService;
+  public userService: UserService;
+  public accountService: Account;
 
   constructor() {
     this.userService = new UserService(client);
+    this.accountService = new Account(client);
   }
 
-  async register(data: AuthUser): Promise<object | unknown> {
+  async register(data: AuthUser) {
     try {
       if (data) {
         data.password = await this.encryptPassword(data.password);
         const response = await this.userService.newUser(data);
+
+        if (response.success) {
+          const { id } = response.user;
+          const resAccount = await this.accountService.createAccount(id);
+
+          if (resAccount.success) {
+            return { ...response, account: resAccount.account };
+          }
+        }
         return response;
       }
       return {

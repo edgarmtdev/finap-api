@@ -17,11 +17,15 @@ class UserService {
       };
     } catch (error) {
       if (error instanceof PrismaClientValidationError) {
-        console.log(error.message);
-
         return {
           success: false,
           error: error.message,
+        };
+      }
+      if (error.code === "P2002") {
+        return {
+          success: false,
+          error: formatMessage(4, error.meta.target),
         };
       }
     }
@@ -64,7 +68,9 @@ class UserService {
       const user = await this.client.user.findUnique({
         where: {
           id: parseInt(id),
-        },
+        }, include: {
+          accounts: true
+        }
       });
 
       return {

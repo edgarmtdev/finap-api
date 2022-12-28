@@ -7,13 +7,13 @@
     "test": "cross-env NODE_ENV=test ts-node ts-mocha -p ./tsconfig.json src/test/*.spec.ts",
     "start": "cross-env NODE_ENV=production babel-node --extensions \".ts\" index.ts",
     "dev": "cross-env NODE_ENV=development nodemon --exec npx babel-node --extensions \".ts\" index.ts",
+    "prisma-dev": "dotenv -e .env.development.local -- npx prisma migrate dev",
+    "prisma-qa": "dotenv -e .env.test.local -- npx prisma migrate dev",
     "lint:fix": "eslint --fix .",
     "lint:check": "eslint .",
     "precommit": "lint-staged",
     "prepare": "husky install",
-    "format": "prettier --write .",
-    "prisma-dev": "dotenv -e .env.development.local -- npx prisma migrate dev",
-    "prisma-qa": "dotenv -e .env.test.local -- npx prisma migrate dev"
+    "format": "prettier --write ."
   },
   "author": "edgarmt.dev",
   "license": "MIT",

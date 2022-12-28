@@ -46,8 +46,8 @@ const verifyToken = (token: string, req, res: Response, next: NextFunction) => {
 };
 
 const validateRole = (req, res: Response, next: NextFunction) => {
-  if (req.user.role === req.neededRole) {
-    console.log(req.user.role === req.neededRole);
+  console.log(req.user.role, req.role);
+  if (req.user.role === req.role) {
     return next();
   }
   return res.status(403).json({
