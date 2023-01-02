@@ -4,7 +4,7 @@
   "description": "A software for finances",
   "main": "index.ts",
   "scripts": {
-    "test": "cross-env NODE_ENV=test ts-node ts-mocha -p ./tsconfig.json src/test/*.spec.ts",
+    "test": "cross-env NODE_ENV=test mocha",
     "start": "cross-env NODE_ENV=production babel-node --extensions \".ts\" index.ts",
     "dev": "cross-env NODE_ENV=development nodemon --exec npx babel-node --extensions \".ts\" index.ts",
     "prisma-dev": "dotenv -e .env.development.local -- npx prisma migrate dev",
@@ -40,6 +40,7 @@
     "@babel/node": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
+    "@babel/register": "^7.18.9",
     "@types/chai": "^4.3.4",
     "@types/cookie-parser": "^1.4.3",
     "@types/expect": "^24.3.0",

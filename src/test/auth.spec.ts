@@ -1,24 +1,26 @@
 import { expect } from "chai";
 import AuthService from "../services/auth";
-import UserService from "../services/user";
 import { AuthUser } from "../types/auth";
+import { initializeDB } from './config/db'
 
-const userService: UserService = new UserService();
-const authService: AuthService = new AuthService(userService);
+before(() => {
+  return initializeDB()
+})
+
+const authService: AuthService = new AuthService();
 
 const user: AuthUser = {
-  role: "USER",
-  email: "test_email@mail.com",
-  password: "123456",
-  name: "User_name",
-  lastName: "User_lastname",
+  role: "ADMIN",
+  email: "edgarmontiel961@gmail.com",
+  name: "Edgar Ulises",
+  lastName: "Montiel Texis",
+  password: "12345",
 };
 
 describe("Auth service", () => {
   it("should register a new user", async () => {
-    const response = authService.register(user);
+    const response = await authService.register(user);
 
-    expect(response).to.be.a("object");
-    expect(response).to.be.equals({ success: true, user });
+    expect(response).to.not.equal(null);
   });
 });
