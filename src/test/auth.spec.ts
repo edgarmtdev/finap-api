@@ -1,11 +1,15 @@
 import { expect } from "chai";
 import AuthService from "../services/auth";
 import { AuthUser } from "../types/auth";
-import { initializeDB } from './config/db'
+import { initializeDB } from "./config/db";
+import Transactions from "../services/transactions";
+import client from "../libs/prisma";
+
+const transactionsService: Transactions = new Transactions(client);
 
 before(() => {
-  return initializeDB()
-})
+  return initializeDB();
+});
 
 const authService: AuthService = new AuthService();
 
@@ -17,10 +21,21 @@ const user: AuthUser = {
   password: "12345",
 };
 
-describe("Auth service", () => {
+describe("Auth service and transactions", () => {
   it("should register a new user", async () => {
     const response = await authService.register(user);
-
     expect(response).to.not.equal(null);
-  });
+  }),
+    it("should deposit money into the user's account", async () => {
+      const response = await transactionsService.incomeMonney(
+        1000,
+        11,
+        11,
+        "test"
+      );
+      console.log(response);
+
+      expect(response.data.total).to.be.a("number");
+      expect(response.data.total).to.be.equal(1000);
+    });
 });

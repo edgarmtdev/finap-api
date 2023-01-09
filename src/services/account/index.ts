@@ -9,8 +9,6 @@ class Account {
 
   async createAccount(idUser: number) {
     try {
-      console.log("Enter");
-
       const account = await this.client.account.create({
         data: {
           idUser,
@@ -29,9 +27,23 @@ class Account {
     }
   }
 
-  async getAccountByUserId(idUser) {
+  async getAccountByUserId(idUser: number) {
     try {
-    } catch (error) {}
+      const account = await this.client.account.findFirst({
+        where : {
+          idUser
+        }
+      });
+      return {
+        success: true,
+        account
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error
+      }
+    }
   }
 
   async updateTotalOfAccount(data: { idAccount: number, amount: number }) {
@@ -48,7 +60,9 @@ class Account {
         }
       });
       return account;
-    } catch (error) {}
+    } catch (error) {
+      return error
+    }
   }
 }
 

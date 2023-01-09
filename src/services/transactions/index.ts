@@ -5,30 +5,34 @@ class Transactions {
   public client: PrismaClient;
   public account: Account;
 
-  constructor(account: Account, client: PrismaClient) {
-    this.client = client;
-    this.account = account;
+  constructor(client: PrismaClient) {
+    this.client = new PrismaClient();
+    this.account = new Account(client);
   }
 
-  async incomeMonney(amount: number, idUser: number, idAccount: number) {
+  async incomeMonney(amount: number, idUser: number, idAccount: number, reason: string) {
     try {
       const income = await this.client.transactions.create({
         data: {
           type: "IN",
-          idUser,
           idAccount,
+          idUser,
           amount,
-        },
+          reason,
+        }
       });
 
       if (income) {
-        const account = await this.account.updateTotalOfAccount({
+        const resAccount = await this.account.getAccountByUserId(idUser);
+        const newAmount: number = resAccount.account.total + amount;
+        
+        const totalAccount = await this.account.updateTotalOfAccount({
           idAccount,
-          amount,
+          amount: newAmount,
         });
         return {
           success: true,
-          data: account
+          data: totalAccount
         }
       }
     } catch (error) {

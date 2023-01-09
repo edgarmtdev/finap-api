@@ -8,6 +8,9 @@ const enviroment: string = path.resolve(
   (("../../.env." + process.env.NODE_ENV) as string) + ".local"
 );
 
+console.log("env", enviroment);
+
+
 dotenv.config({
   path: enviroment,
 });
