@@ -70,8 +70,6 @@ class AuthService {
         message: formatMessage(3, "email and password"),
       };
     } catch (error) {
-      console.log("error", error);
-
       return {
         success: false,
         message: error,

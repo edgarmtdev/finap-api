@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import Account from "../account";
+import TransactionMoney from "./model";
 
 class Transactions {
   public client: PrismaClient;
@@ -10,36 +11,67 @@ class Transactions {
     this.account = new Account(client);
   }
 
-  async incomeMonney(amount: number, idUser: number, idAccount: number, reason: string) {
+  async newTransaction(data: TransactionMoney) {
     try {
       const income = await this.client.transactions.create({
         data: {
           type: "IN",
-          idAccount,
-          idUser,
-          amount,
-          reason,
-        }
+          idAccount: data.idAccount,
+          idUser: data.idUser,
+          amount: data.amount,
+          reason: data.reason,
+        },
       });
+      return {
+        success: true,
+        operation: income,
+      };
+    } catch (error) {}
+  }
 
-      if (income) {
-        const resAccount = await this.account.getAccountByUserId(idUser);
-        const newAmount: number = resAccount.account.total + amount;
-        
-        const totalAccount = await this.account.updateTotalOfAccount({
-          idAccount,
-          amount: newAmount,
-        });
+  async updateAccountOfUser(idAccount: number, amount: number) {
+    try {
+      const account = await this.account.updateTotalOfAccount({
+        idAccount,
+        amount,
+      });
+      return {
+        success: true,
+        account,
+      };
+    } catch (error) {}
+  }
+
+  async incomeMoney(data: TransactionMoney) {
+    try {
+      const income = await this.newTransaction(data);
+
+      if (income.success) {
+        const resAccount = await this.account.getAccountByUserId(data.idUser);
+        const newAmount: number = resAccount.account.total + data.amount;
+
+        const totalAccount = await this.updateAccountOfUser(
+          data.idAccount,
+          newAmount
+        );
         return {
           success: true,
-          data: totalAccount
-        }
+          data: totalAccount,
+        };
       }
     } catch (error) {
       return {
         success: false,
         data: error,
       };
+    }
+  }
+
+  withdrawalMoney(data: TransactionMoney) {
+    try {
+      
+    } catch (error) {
+      
     }
   }
 }

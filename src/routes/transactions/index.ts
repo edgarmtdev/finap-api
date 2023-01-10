@@ -13,13 +13,7 @@ const transactionsRouter = (app: Application, client: PrismaClient) => {
     "/income",
     authValidation("ADMIN"),
     async (req: Request, res: Response) => {
-      const { amount, idUser, idAccount, reason } = req.body;
-      const response = await transactionsService.incomeMonney(
-        amount,
-        idUser,
-        idAccount,
-        reason
-      );
+      const response = await transactionsService.incomeMoney(req.body);
       return res.status(response.success ? 200 : 400).json(response);
     }
   );

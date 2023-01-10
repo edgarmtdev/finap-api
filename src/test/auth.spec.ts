@@ -27,12 +27,12 @@ describe("Auth service and transactions", () => {
     expect(response).to.not.equal(null);
   }),
     it("should deposit money into the user's account", async () => {
-      const response = await transactionsService.incomeMonney(
-        1000,
-        11,
-        11,
-        "test"
-      );
+      const response = await transactionsService.incomeMoney({
+        amount: 1000,
+        idUser: 13,
+        idAccount: 13,
+        reason: "test",
+      });
       console.log(response);
 
       expect(response.data.total).to.be.a("number");
