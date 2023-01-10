@@ -15,7 +15,7 @@ class Transactions {
     try {
       const income = await this.client.transactions.create({
         data: {
-          type: "IN",
+          type: data.type,
           idAccount: data.idAccount,
           idUser: data.idUser,
           amount: data.amount,
@@ -26,7 +26,12 @@ class Transactions {
         success: true,
         operation: income,
       };
-    } catch (error) {}
+    } catch (error) {
+      return {
+        success: false,
+        error,
+      };
+    }
   }
 
   async updateAccountOfUser(idAccount: number, amount: number) {
@@ -39,7 +44,12 @@ class Transactions {
         success: true,
         account,
       };
-    } catch (error) {}
+    } catch (error) {
+      return {
+        success: false,
+        error,
+      };
+    }
   }
 
   async incomeMoney(data: TransactionMoney) {
@@ -67,11 +77,28 @@ class Transactions {
     }
   }
 
-  withdrawalMoney(data: TransactionMoney) {
+  async withdrawalMoney(data: TransactionMoney) {
     try {
-      
+      const withdrawal = await this.newTransaction(data);
+
+      if (withdrawal.success) {
+        const resAccount = await this.account.getAccountByUserId(data.idUser);
+        const newAmount: number = resAccount.account.total - data.amount;
+
+        const totalAccount = await this.updateAccountOfUser(
+          data.idAccount,
+          newAmount
+        );
+        return {
+          success: true,
+          data: totalAccount,
+        };
+      }
     } catch (error) {
-      
+      return {
+        success: false,
+        data: error,
+      };
     }
   }
 }

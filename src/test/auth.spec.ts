@@ -25,17 +25,33 @@ describe("Auth service and transactions", () => {
   it("should register a new user", async () => {
     const response = await authService.register(user);
     expect(response).to.not.equal(null);
-  }),
-    it("should deposit money into the user's account", async () => {
-      const response = await transactionsService.incomeMoney({
-        amount: 1000,
-        idUser: 13,
-        idAccount: 13,
-        reason: "test",
-      });
-      console.log(response);
+  });
 
-      expect(response.data.total).to.be.a("number");
-      expect(response.data.total).to.be.equal(1000);
+  it("should deposit money into the user's account", async () => {
+    const response = await transactionsService.incomeMoney({
+      type: "IN",
+      amount: 1000,
+      idUser: 16,
+      idAccount: 16,
+      reason: "test",
     });
+    console.log(response);
+
+    expect(response.data.total).to.be.a("number");
+    expect(response.data.total).to.be.equal(1000);
+  });
+
+  it("should withdrawal money into the user's account", async () => {
+    const response = await transactionsService.withdrawalMoney({
+      type: "OUT",
+      amount: 500,
+      idUser: 16,
+      idAccount: 16,
+      reason: "test",
+    });
+    console.log(response);
+
+    expect(response.data.total).to.be.a("number");
+    expect(response.data.total).to.be.equal(500);
+  });
 });

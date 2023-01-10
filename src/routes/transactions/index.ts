@@ -17,6 +17,15 @@ const transactionsRouter = (app: Application, client: PrismaClient) => {
       return res.status(response.success ? 200 : 400).json(response);
     }
   );
+
+  router.post(
+    "withdrawal",
+    authValidation("ADMIN"),
+    async (req: Request, res: Response) => {
+      const response = await transactionsService.withdrawalMoney(req.body);
+      return res.status(response.success ? 200 : 400).json(response);
+    }
+  );
 };
 
 export default transactionsRouter;
