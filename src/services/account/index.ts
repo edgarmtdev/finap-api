@@ -30,23 +30,23 @@ class Account {
   async getAccountByUserId(idUser: number) {
     try {
       const account = await this.client.account.findFirst({
-        where : {
-          idUser
-        }
+        where: {
+          idUser,
+        },
       });
       return {
         success: true,
-        account
-      }
+        account,
+      };
     } catch (error) {
       return {
         success: false,
-        error
-      }
+        error,
+      };
     }
   }
 
-  async updateTotalOfAccount(data: { idAccount: number, amount: number }) {
+  async updateTotalOfAccount(data: { idAccount: number; amount: number }) {
     try {
       const account = await this.client.account.update({
         where: {
@@ -56,12 +56,12 @@ class Account {
           total: data.amount,
         },
         include: {
-          user: true
-        }
+          user: true,
+        },
       });
       return account;
     } catch (error) {
-      return error
+      return error;
     }
   }
 }

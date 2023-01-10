@@ -10,7 +10,6 @@ const enviroment: string = path.resolve(
 
 console.log("env", enviroment);
 
-
 dotenv.config({
   path: enviroment,
 });

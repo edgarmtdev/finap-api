@@ -68,9 +68,10 @@ class UserService {
       const user = await this.client.user.findUnique({
         where: {
           id: parseInt(id),
-        }, include: {
-          accounts: true
-        }
+        },
+        include: {
+          accounts: true,
+        },
       });
 
       return {
