@@ -17,7 +17,7 @@ class Account {
       });
       return {
         success: true,
-        account,
+        data: account,
       };
     } catch (error) {
       return {
@@ -36,7 +36,7 @@ class Account {
       });
       return {
         success: true,
-        account,
+        data: account,
       };
     } catch (error) {
       return {

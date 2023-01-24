@@ -8,16 +8,12 @@ const usersRouter = (app: express.Application, client: PrismaClient) => {
   const router: express.IRouter = Router();
   app.use("/api/users", router);
 
-  router.get(
-    "/find-user",
-    authValidation("ADMIN"),
-    async (req: Request, res: Response) => {
-      const { id } = req.query;
-      console.log(req.params);
-      const user = await userService.findUserById(id as string);
-      return res.json(user);
-    }
-  );
+  router.get("/find-user", async (req: Request, res: Response) => {
+    const { id } = req.query;
+    console.log(req.params);
+    const user = await userService.findUserById(id as string);
+    return res.json(user);
+  });
 };
 
 export default usersRouter;

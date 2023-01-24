@@ -13,6 +13,7 @@ class Transactions {
 
   async newTransaction(data: TransactionMoney) {
     try {
+      console.log(data);
       const income = await this.client.transactions.create({
         data: {
           type: data.type,
@@ -42,28 +43,31 @@ class Transactions {
       });
       return {
         success: true,
-        account,
+        data: account,
       };
     } catch (error) {
       return {
         success: false,
-        error,
+        data: error,
       };
     }
   }
 
   async incomeMoney(data: TransactionMoney) {
     try {
+      data.type = "IN";
       const income = await this.newTransaction(data);
 
       if (income.success) {
-        const resAccount = await this.account.getAccountByUserId(data.idUser);
-        const newAmount: number = resAccount.account.total + data.amount;
+        const account = await this.account.getAccountByUserId(data.idUser);
+        const newAmount: number = account.data.total + data.amount;
 
         const totalAccount = await this.updateAccountOfUser(
           data.idAccount,
           newAmount
         );
+
+        console.log("test", totalAccount);
         return {
           success: true,
           data: totalAccount,
@@ -79,11 +83,20 @@ class Transactions {
 
   async withdrawalMoney(data: TransactionMoney) {
     try {
+      const account = await this.account.getAccountByUserId(data.idUser);
+
+      if (account.data.total === 0 || account.data.total < data.amount) {
+        return {
+          success: false,
+          data: "No cuentas con el saldo suficiente",
+        };
+      }
+
+      data.type = "OUT";
       const withdrawal = await this.newTransaction(data);
 
       if (withdrawal.success) {
-        const resAccount = await this.account.getAccountByUserId(data.idUser);
-        const newAmount: number = resAccount.account.total - data.amount;
+        const newAmount: number = account.data.total - data.amount;
 
         const totalAccount = await this.updateAccountOfUser(
           data.idAccount,

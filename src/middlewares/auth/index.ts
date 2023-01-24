@@ -12,7 +12,6 @@ const authValidation = (role: Role) => {
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
-  console.log(req.cookies);
 
   if (!token) {
     return res.status(403).json({
@@ -46,7 +45,6 @@ const verifyToken = (token: string, req, res: Response, next: NextFunction) => {
 };
 
 const validateRole = (req, res: Response, next: NextFunction) => {
-  console.log(req.user.role, req.role);
   if (req.user.role === req.role) {
     return next();
   }

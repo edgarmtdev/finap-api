@@ -73,15 +73,18 @@ class UserService {
           accounts: true,
         },
       });
+      if (!user) throw new Error("No user found");
 
       return {
         success: true,
-        user,
+        data: user,
       };
     } catch (error) {
+      console.log(error);
+
       return {
         success: false,
-        error,
+        data: error.message,
       };
     }
   }

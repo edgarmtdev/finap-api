@@ -19,7 +19,7 @@ const transactionsRouter = (app: Application, client: PrismaClient) => {
   );
 
   router.post(
-    "withdrawal",
+    "/withdrawal",
     authValidation("ADMIN"),
     async (req: Request, res: Response) => {
       const response = await transactionsService.withdrawalMoney(req.body);
